@@ -1,0 +1,16 @@
+services:
+  backend:
+    build: ./Backend
+    ports:
+      - "8000:8000"
+    container_name: breast-cancer-backend
+
+  frontend:
+    build: ./Frontend
+    ports:
+      - "7860:7860"
+    container_name: breast-cancer-frontend
+    environment:
+      - BACKEND_URL=http://backend:8000
+    depends_on:
+      - backend
