@@ -1,0 +1,15 @@
+.venv/
+venv/
+*.venv
+env/
+
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+*.pkl
+*.joblib
+
+#Docker
+*.log
