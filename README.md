@@ -178,7 +178,7 @@ services:
 
 ```bash
 npm install -g phala
-phala auth login
+phala login
 phala deploy -c docker-compose.phala.yml -n breast-cancer-predictor --wait
 ```
 
