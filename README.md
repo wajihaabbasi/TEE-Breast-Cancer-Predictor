@@ -22,7 +22,6 @@ A two-container ML app: a **FastAPI backend** serving a logistic regression mode
 
 ```
 Breast_Cancer_Predictor/
-├── venv/                       # Python virtual environment (not committed)
 ├── Backend/
 │   ├── data/data.csv           # WDBC dataset
 │   ├── app/
@@ -64,9 +63,8 @@ Good for quick development. You need two terminals.
 From the project root:
 
 ```bash
-cd ~/Thesis/Breast_Cancer_Predictor
 python3 -m venv venv
-source venv/bin/activate          # Windows PowerShell: venv\Scripts\Activate.ps1
+source venv/bin/activate          
 ```
 
 ```bash
@@ -93,7 +91,6 @@ Open <http://127.0.0.1:8000/docs> to see the interactive API docs. `GET /health`
 ### 3.4 Start the frontend (terminal 2)
 
 ```bash
-cd ~/Thesis/Breast_Cancer_Predictor
 source venv/bin/activate
 cd Frontend
 pip install -r requirements.txt
@@ -143,7 +140,6 @@ docker login
 Replace `YOURUSER` with your Docker Hub username:
 
 ```bash
-cd ~/Thesis/Breast_Cancer_Predictor
 docker build -t YOURUSER/bc-backend:latest  ./Backend
 docker build -t YOURUSER/bc-frontend:latest ./Frontend
 docker push YOURUSER/bc-backend:latest
