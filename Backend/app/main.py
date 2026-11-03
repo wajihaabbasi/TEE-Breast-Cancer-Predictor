@@ -46,7 +46,7 @@ class Config:
 
 @app.get("/")
 def root():
-	return{"message" : "Breast Cancer Prediction API is running. Visit \docs to test."}
+	return{"message" : "Breast Cancer Prediction API is running. Visit \\docs to test."}
 
 @app.get("/health")
 def health():
