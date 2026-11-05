@@ -14,7 +14,7 @@ A two-container ML app: a **FastAPI backend** serving a logistic regression mode
 4. [Run locally with Docker Compose](#4-run-locally-with-docker-compose)
 5. [Deploy to Phala Cloud (confidential VM)](#5-deploy-to-phala-cloud-confidential-vm)
 6. [Viewing the attestation](#6-viewing-the-attestation)
-7. [Troubleshooting](#9-troubleshooting)
+
 
 ---
 
@@ -56,8 +56,6 @@ Breast_Cancer_Predictor/
 
 ## 3. Run locally with Python (no Docker)
 
-Good for quick development. You need two terminals.
-
 ### 3.1 Create and activate the virtual environment
 
 From the project root:
@@ -78,15 +76,13 @@ pip install -r requirements.txt
 python3 train.py
 ```
 
-You should see an accuracy of about 0.96 and the message that the model, scaler and feature names were saved into `app/`.
+Upon success, you should see an accuracy of about 0.96 and the message that the model, scaler and feature names were saved into `app/`.
 
 ### 3.3 Start the backend (terminal 1)
 
 ```bash
 python3 -m uvicorn app.main:app --reload
 ```
-
-Open <http://127.0.0.1:8000/docs> to see the interactive API docs. `GET /health` should return `{"status":"ok"}`.
 
 ### 3.4 Start the frontend (terminal 2)
 
@@ -96,9 +92,6 @@ cd Frontend
 pip install -r requirements.txt
 python3 gradio_app.py
 ```
-
-Open <http://127.0.0.1:7860>, enter 30 values (copy a row from `Backend/data/data.csv`, skipping `id` and `diagnosis`) and submit. You should get a diagnosis and a malignancy probability.
-
 ---
 
 ## 4. Run locally with Docker Compose
@@ -109,7 +102,7 @@ From the project root, with the model files already created (step 3.2):
 docker compose up --build
 ```
 
-Wait until you see both lines:
+Expected output:
 
 ```
 breast-cancer-backend   | Uvicorn running on http://0.0.0.0:8000
@@ -146,8 +139,6 @@ docker push YOURUSER/bc-backend:latest
 docker push YOURUSER/bc-frontend:latest
 ```
 
-Re-run these two build + push steps every time you change code.
-
 ### 5.3 Check `docker-compose.phala.yml`
 
 ```yaml
@@ -178,8 +169,6 @@ phala login
 phala deploy -c docker-compose.phala.yml -n breast-cancer-predictor --wait
 ```
 
-`--wait` blocks until the confidential VM is up. Check status any time:
-
 ```bash
 phala cvms list
 phala cvms get breast-cancer-predictor
@@ -207,8 +196,6 @@ This prints an attestation summary. For the full raw data (quote, event log, and
 phala cvms attestation breast-cancer-predictor --json
 ```
 
-> Per Phala's docs this command is marked *unstable* and may change between CLI versions. If it errors, run `phala cvms --help` to see the current subcommands.
-
 ### 02: Phala Cloud dashboard
 
 Open your CVM in the dashboard at <https://cloud.phala.network> and use its attestation view. 
@@ -221,25 +208,7 @@ Open your CVM in the dashboard at <https://cloud.phala.network> and use its atte
 
 ---
 
-## 7. Troubleshooting
 
-| Symptom | Likely cause and fix |
-|---|---|
-| `ModuleNotFoundError: No module named 'joblib'` | Wrong or inactive venv. Run `echo $VIRTUAL_ENV`; it must point inside this project. If it does not, `deactivate`, then `source venv/bin/activate` from the project root. If the venv was copied from another project, delete it and recreate with `python3 -m venv venv`. |
-| `uvicorn` traces show `/usr/lib/python3/dist-packages/...` | A system uvicorn is being used. Run `python3 -m uvicorn app.main:app` instead. |
-| `permission denied ... /var/run/docker.sock` | Add yourself to the docker group: `sudo usermod -aG docker $USER`, then log out and back in. |
-| `docker compose: unknown command` | Compose V2 plugin missing. Install `docker-compose-plugin` from Docker's official apt repository. |
-| Frontend container exits: `can't open file '/app/gradio_app.py'` | Filename or case mismatch with the Dockerfile `CMD`. Check the exact filename. |
-| Gradio shows `Error contacting backend` | Backend not running, or wrong `BACKEND_URL`. Locally it defaults to `http://127.0.0.1:8000`; in Docker it must be `http://backend:8000`. |
-| Phala deploy: `422 ... while parsing a block mapping` | YAML indentation error in the compose file. Use spaces only, 2 per level; check with `cat -A docker-compose.phala.yml`. |
-| Phala link opens the dashboard, not the app | That link is the management page. See step 5.5 for the app's public endpoint. |
-| `/attestation` returns 503 locally | Expected outside a dstack CVM. It works only inside a confidential VM (or against the dstack simulator via `DSTACK_ENDPOINT`). |
-
----
-
-## References
-
-- Phala Cloud CLI: `phala cvms attestation` reference, <https://docs.phala.com/phala-cloud/phala-cloud-cli/cvms/attestation>
 - Phala Cloud: Get Attestation guide, <https://docs.phala.com/phala-cloud/attestation/get-attestation>
 - dstack SDK for Python, <https://pypi.org/project/dstack-sdk/>
 - Wolberg, W. H., Street, W. N., & Mangasarian, O. L. (1995). *Breast Cancer Wisconsin (Diagnostic) Data Set*. UCI Machine Learning Repository. https://doi.org/10.24432/C5DW2B
